@@ -2,67 +2,53 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use App\Models\Dosen;
 use App\Models\BidangPenelitian;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DosenSeeder extends Seeder
 {
     public function run(): void
     {
-        // Pastikan tabel bidang_penelitians sudah ada datanya
-        $bidangPenelitians = BidangPenelitian::all();
+        // Daftar gelar awal & akhir
+        $gelarAwalList = ['Dr.', 'Prof.', 'Ir.', 'Drs.', ''];
+        $gelarAkhirList = ['S.T.', 'M.T.', 'M.Kom.', 'M.Sc.', 'Ph.D.', 'M.Eng.', 'S.Kom.', 'Dr.Eng.'];
 
-        if ($bidangPenelitians->isEmpty()) {
-            $this->command->warn('⚠️  Tidak ada data bidang penelitian. Jalankan BidangPenelitianSeeder terlebih dahulu.');
-            return;
-        }
+        // Ambil semua bidang penelitian yang tersedia
+        $bidangs = BidangPenelitian::all();
 
-        // Daftar nama depan dan belakang untuk membuat variasi nama
-        $namaDepan = [
-            'Dr.', 'Prof.', 'Ir.', 'Drs.', 'M.', 'Dr. Eng.', 'Prof. Dr.'
+        // Daftar nama dosen contoh
+        $namaList = [
+            'Budi Santoso',
+            'Rina Wulandari',
+            'Andi Prasetyo',
+            'Dewi Lestari',
+            'Rahmat Hidayat',
+            'Siti Aminah',
+            'Dimas Nugroho',
+            'Lina Marlina',
+            'Bagus Saputra',
+            'Anita Sari',
         ];
 
-        $namaOrang = [
-            'Budi Santoso', 'Rina Kartika', 'Ahmad Fauzi', 'Maya Sari', 'Dimas Prasetyo',
-            'Nurul Hidayah', 'Andi Wijaya', 'Reni Wulandari', 'Taufik Rahman', 'Sinta Lestari',
-            'Agus Setiawan', 'Fajar Prakoso', 'Indah Puspita', 'Yusuf Maulana', 'Dewi Sartika',
-            'Bayu Kurniawan', 'Lina Marlina', 'Hendra Saputra', 'Fitriani Rahmah', 'Rizky Nugroho',
-            'Nadia Salsabila', 'Dedi Irawan', 'Eka Putri', 'Joko Susilo', 'Sarah Amelia',
-            'Reza Firmansyah', 'Ratna Dewi', 'Rio Pratama', 'Ayu Lestari', 'Hana Setyaningsih',
-            'Toni Gunawan', 'Wahyu Ramadhan', 'Anisa Putri', 'Iwan Kurnia', 'Citra Dewi',
-            'Rendy Pradana', 'Mellya Safitri', 'Bagus Santosa', 'Vina Maharani', 'Rafi Fauzan',
-            'Silvi Oktaviani', 'Gilang Saputra', 'Farhan Hidayat', 'Laila Fitri', 'Adi Permana',
-            'Putri Anggraini', 'Dion Firmansyah', 'Mega Rahmawati', 'Bambang Sutrisno', 'Aulia Sari',
-            'Yoga Pratama', 'Sari Melati', 'Hafiz Ramadhan', 'Desi Nuraini', 'Andre Kurniawan',
-            'Intan Permata', 'Kurnia Ramdani', 'Selvi Oktavia', 'Ridho Fadhil', 'Tia Amalia',
-            'Evan Santoso', 'Lutfi Maulana', 'Rosa Anggraini', 'Zaki Pratomo', 'Diana Fitriani',
-            'Yuni Astuti', 'Ferry Saputra', 'Kiki Lestari', 'Angga Permadi', 'Mila Rahmi',
-            'Sofyan Hadi', 'Wulan Sari', 'Rahmat Hidayat', 'Susi Wulandari', 'Teguh Santoso',
-            'Nita Amelia', 'Hani Fitriyah', 'Bagas Prasetyo', 'Della Rahma', 'Agung Widodo',
-            'Aditia Nugraha', 'Salsa Amelia', 'Andra Putra', 'Rara Salsabila', 'Naufal Hakim',
-            'Evi Susanti', 'Yuli Pratiwi', 'Galih Ramadhan', 'Mira Safitri', 'Ari Wibowo',
-            'Anita Pramesti', 'Herman Setyo', 'Cindy Lestari', 'Alfi Rahman', 'Bella Putri',
-            'Nanda Aprilia', 'Rio Setiawan', 'Rika Amelia', 'Rafli Gunawan', 'Yasmin Zahra'
-        ];
+        foreach ($namaList as $nama) {
+            // Pilih gelar secara acak
+            $gelarAwal = $gelarAwalList[array_rand($gelarAwalList)];
+            $gelarAkhir = $gelarAkhirList[array_rand($gelarAkhirList)];
 
-        // Membuat 100 dosen secara acak
-        for ($i = 0; $i < 100; $i++) {
-            $prefix = $namaDepan[array_rand($namaDepan)];
-            $nama = $prefix . ' ' . $namaOrang[array_rand($namaOrang)];
-
-            $major = $bidangPenelitians->random();
-            $minor = rand(0, 1) ? $bidangPenelitians->random() : null; // kadang ada minor
+            // Pilih bidang major & minor acak
+            $major = $bidangs->random();
+            $minor = $bidangs->where('id', '!=', $major->id)->random();
 
             Dosen::create([
                 'id' => Str::uuid(),
                 'nama' => $nama,
+                'gelar_awal' => $gelarAwal,
+                'gelar_akhir' => $gelarAkhir,
                 'bidang_penelitian_major_id' => $major->id,
-                'bidang_penelitian_minor_id' => $minor?->id,
+                'bidang_penelitian_minor_id' => $minor->id,
             ]);
         }
-
-        $this->command->info('✅ 100 data dosen berhasil dibuat oleh DosenSeeder.');
     }
 }
