@@ -17,8 +17,13 @@ class BidangPenelitian extends Model
         return $this->hasMany(Dosen::class, 'bidang_penelitian_major_id');
     }
 
-    public function dosenMinor()
+   public function dosenMinor()
     {
-        return $this->hasMany(Dosen::class, 'bidang_penelitian_minor_id');
+        return $this->belongsToMany(
+            Dosen::class,
+            'dosen_minor_bidang',
+            'bidang_penelitian_id',
+            'dosen_id'
+        );
     }
 }

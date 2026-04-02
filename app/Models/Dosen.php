@@ -10,7 +10,9 @@ class Dosen extends Model
 {
       use HasFactory;
 
+  
     protected $table = 'dosens';
+    protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
 
@@ -19,6 +21,8 @@ class Dosen extends Model
         'nama',
         'bidang_penelitian_major_id',
         'bidang_penelitian_minor_id',
+        'gelar_awal',
+        'gelar_akhir',
     ];
 
     protected static function booted()
@@ -36,8 +40,13 @@ class Dosen extends Model
         return $this->belongsTo(BidangPenelitian::class, 'bidang_penelitian_major_id');
     }
 
-    public function minor()
+     public function minors()
     {
-        return $this->belongsTo(BidangPenelitian::class, 'bidang_penelitian_minor_id');
+        return $this->belongsToMany(
+            BidangPenelitian::class,
+            'dosen_minor_bidang',
+            'dosen_id',
+            'bidang_penelitian_id'
+        );
     }
 }

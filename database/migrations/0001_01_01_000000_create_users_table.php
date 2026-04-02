@@ -13,16 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id(); // primary key auto-increment untuk relasi
-            $table->string('google_id')->unique()->default('123'); // wajib diisi, bisa jadi relasi
             $table->string('name');
+            $table->string('username')->unique(); 
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-
-            $table->string('provider')->default('google');       // wajib diisi
-            $table->string('provider_id')->unique()->nullable( ); // wajib diisi
-            $table->string('avatar');         // wajib diisi
-
-            $table->string('password')->nullable(); // nullable untuk login sosial
+            $table->string('avatar')->nullable();       
+            $table->enum('role', ['mahasiswa', 'admin', 'kaprodi','dosen'])->default('mahasiswa');
+            $table->enum('program_studi',['PTI','SI','TI','TIF','TEKKOM','NULL'])->default('NULL');
+            $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });

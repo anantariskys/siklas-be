@@ -2,64 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BidangPenelitian;
-use Illuminate\Http\Request;
+use App\Services\BidangPenelitianService;
+use App\Traits\ApiResponse;
+use OpenApi\Attributes as OA;
 
 class BidangPenelitianController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use ApiResponse;
+
+    protected BidangPenelitianService $bidangPenelitianService;
+
+    public function __construct(BidangPenelitianService $bidangPenelitianService)
     {
-        //
+        $this->bidangPenelitianService = $bidangPenelitianService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    #[OA\Get(
+        path: '/bidang-penelitian/options',
+        operationId: 'getBidangPenelitianOptions',
+        summary: 'Get all fields of study as options',
+        tags: ['Public - Bidang Penelitian'],
+        security: []
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Successful operation',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'Bidang penelitian berhasil diambil'),
+                new OA\Property(property: 'data', type: 'array', items: new OA\Items(type: 'object')),
+            ]
+        )
+    )]
+    public function options()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(BidangPenelitian $bidangPenelitian)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(BidangPenelitian $bidangPenelitian)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, BidangPenelitian $bidangPenelitian)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(BidangPenelitian $bidangPenelitian)
-    {
-        //
+        $bidangPenelitians = $this->bidangPenelitianService->all();
+        return $this->successResponse($bidangPenelitians, 'Bidang penelitian berhasil diambil');
     }
 }

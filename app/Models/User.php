@@ -6,23 +6,29 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'provider',
-        'provider_id',
+        'username',
+        'role',
         'avatar',
-        'google_id',
+        'program_studi',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    public function riwayatKlasifikasi()
+    {
+        return $this->hasMany(RiwayatKlasifikasi::class);
+    }
 }

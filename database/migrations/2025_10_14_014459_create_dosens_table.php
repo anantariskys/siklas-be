@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('dosens', function (Blueprint $table) {
+        Schema::create('dosens', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
-            $table->string('gelar_awal');
-            $table->string('gelar_akhir');
-            $table->uuid('bidang_penelitian_major_id');
-            $table->uuid('bidang_penelitian_minor_id')->nullable();
-            $table->foreign('bidang_penelitian_major_id')->references('id')->on('bidang_penelitians');
-            $table->foreign('bidang_penelitian_minor_id')->references('id')->on('bidang_penelitians');
-            $table->timestamps();
+            $table->string('gelar_awal')->nullable();
+            $table->string('gelar_akhir')->nullable();
 
+            // Mayor: Satu bidang penelitian
+            $table->uuid('bidang_penelitian_major_id');
+            $table->foreign('bidang_penelitian_major_id')
+                ->references('id')
+                ->on('bidang_penelitians')
+                ->cascadeOnDelete();
+
+            $table->timestamps();
         });
     }
 

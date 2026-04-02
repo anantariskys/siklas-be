@@ -21,4 +21,14 @@ trait ApiResponse
             'errors' => $errors
         ], $code);
     }
+
+    protected function successPaginationResponse($data, $pagination, $message = 'Success', $code = 200)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data,
+            'pagination' => $pagination
+        ], $code);
+    }
 }
