@@ -6,7 +6,11 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'https://siklas.vercel.app/'], // frontend domain
+    'allowed_origins' => [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://siklas.vercel.app'
+    ],
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],

@@ -20,7 +20,6 @@ class Dosen extends Model
         'id',
         'nama',
         'bidang_penelitian_major_id',
-        'bidang_penelitian_minor_id',
         'gelar_awal',
         'gelar_akhir',
     ];
